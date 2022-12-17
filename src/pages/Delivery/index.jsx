@@ -319,7 +319,6 @@ function Delivery(props) {
   }
 
   useEffect(() => {
-    console.log("stateStatus", stateStatus);
     callback(stateStatus);
   }, [dateTime?.from_time, dateTime?.to_time, stateStatus]);
 
@@ -522,9 +521,6 @@ function Delivery(props) {
                     formatDate[0]
                   ).getTime();
                   const to_time = (to_time_now + 86400000) / 1000;
-
-                  console.log("to_time", to_time);
-
                   setDateTime((pre) => ({ ...pre, to_time }));
                 }}
               />
