@@ -4,8 +4,19 @@ import {
   EditFilled,
   EditOutlined,
 } from "@ant-design/icons";
-import { Button, message, Popconfirm, Space, Table, Tabs, Tooltip } from "antd";
+import {
+  Button,
+  DatePicker,
+  message,
+  Popconfirm,
+  Select,
+  Space,
+  Table,
+  Tabs,
+  Tooltip,
+} from "antd";
 import axios from "axios";
+import moment from "moment";
 import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
 import "./style.scss";
@@ -55,6 +66,7 @@ function Delivery(props) {
   const [data, setData] = useState([]);
   const { TabPane } = Tabs;
   const history = useHistory();
+  const [dateTime, setDateTime] = useState({});
 
   // console.log(new Date(Number(1651424400 * 1000)).toLocaleDateString("en-GB"));
   // console.log(new Date(Number(1652720400 * 1000)).toLocaleDateString("en-GB"));
@@ -62,8 +74,8 @@ function Delivery(props) {
   const staticDataFilter = {
     shop_id: 3581868,
     payment_type_id: [1, 2],
-    from_time: 1670000400,
-    to_time: 1671296400,
+    from_time: dateTime?.from_time ?? 1670000400,
+    to_time: dateTime?.to_time ?? 1671296400,
     offset: 0,
     limit: 20,
     option_value: null,
@@ -305,6 +317,11 @@ function Delivery(props) {
   function cancel(e) {
     return;
   }
+
+  useEffect(() => {
+    callback(stateStatus);
+  }, [dateTime?.from_time, dateTime?.to_time, stateStatus]);
+
   // Render table filter by status
   const callback = async (keyFilter) => {
     // console.log("Key filter", keyFilter);
@@ -405,7 +422,7 @@ function Delivery(props) {
         </Button> */}
       </div>
       <div className="section_tab-delivery" style={{ padding: "16px" }}>
-        <Tabs defaultActiveKey="Chờ bàn giao" onChange={callback}>
+        <Tabs onChange={callback}>
           {dataCountOrderByStatus?.map((x, i) => (
             <TabPane
               tab={`${Object.keys(x)} ${Object.values(x)}`}
@@ -413,6 +430,103 @@ function Delivery(props) {
             ></TabPane>
           ))}
         </Tabs>
+      </div>
+      <div
+        className="section_filter-delivert"
+        style={{
+          display: "flex",
+          justifyContent: "space-evenly",
+          marginBottom: 16,
+        }}
+      >
+        <div>
+          <p>Bộ lọc</p>
+        </div>
+        <div>
+          <div>Trạng thái</div>
+          <div>
+            <Select
+              options={[
+                {
+                  value: "jack",
+                  label: "Jack",
+                },
+              ]}
+              style={{ width: "100%" }}
+            />
+          </div>
+        </div>
+
+        <div>
+          <div>Tùy chọn thanh tooán</div>
+          <div>
+            <Select
+              options={[
+                {
+                  value: "jack",
+                  label: "Jack",
+                },
+              ]}
+              style={{ width: "100%" }}
+            />
+          </div>
+        </div>
+
+        <div>
+          <div>In vận đơn</div>
+          <div>
+            <Select
+              options={[
+                {
+                  value: "jack",
+                  label: "Jack",
+                },
+              ]}
+              style={{ width: "100%" }}
+            />
+          </div>
+        </div>
+
+        <div>
+          <div>Thời gian tạo đơn</div>
+          <div style={{ display: "flex", justifyContent: "space-evenly" }}>
+            <div className="from_date">
+              <DatePicker
+                onChange={(value) => {
+                  const formatDate = moment(value)
+                    .format("DD/MM/YYYY")
+                    .split("/");
+
+                  const from_time =
+                    new Date(
+                      formatDate[2],
+                      formatDate[1] - 1,
+                      formatDate[0]
+                    ).getTime() / 1000;
+
+                  setDateTime((pre) => ({ ...pre, from_time }));
+                }}
+              />
+            </div>
+            <div className="to_date">
+              <DatePicker
+                onChange={(value) => {
+                  const formatDate = moment(value)
+                    .format("DD/MM/YYYY")
+                    .split("/");
+
+                  const to_time_now = new Date(
+                    formatDate[2],
+                    formatDate[1] - 1,
+                    formatDate[0]
+                  ).getTime();
+                  const to_time = (to_time_now + 86400000) / 1000;
+                  setDateTime((pre) => ({ ...pre, to_time }));
+                }}
+              />
+            </div>
+          </div>
+        </div>
       </div>
       <Table
         dataSource={data}
