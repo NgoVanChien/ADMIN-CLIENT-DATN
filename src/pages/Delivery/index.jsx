@@ -73,9 +73,12 @@ function Delivery(props) {
 
   const staticDataFilter = {
     shop_id: 3581868,
-    payment_type_id: [1, 2],
-    from_time: dateTime?.from_time ?? 1670000400,
-    to_time: dateTime?.to_time ?? 1671296400,
+    payment_type_id:
+      dateTime?.payment_type_id?.length > 0
+        ? dateTime?.payment_type_id
+        : [1, 2],
+    from_time: dateTime?.from_time ? dateTime?.from_time : 1670000400,
+    to_time: dateTime?.to_time ? dateTime?.to_time : 1671296400,
     offset: 0,
     limit: 20,
     option_value: null,
@@ -86,6 +89,10 @@ function Delivery(props) {
     is_search_exactly: true,
     is_print: null,
     source: "5sao",
+    status:
+      dateTime?.status?.length > 0
+        ? dateTime?.status
+        : ["ready_to_pick", "picking", "money_collect_picking"],
   };
 
   const filterByStatus = {
@@ -320,7 +327,9 @@ function Delivery(props) {
 
   useEffect(() => {
     callback(stateStatus);
-  }, [dateTime?.from_time, dateTime?.to_time, stateStatus]);
+  }, [dateTime, stateStatus]);
+
+  console.log("datetime", dateTime);
 
   // Render table filter by status
   const callback = async (keyFilter) => {
@@ -435,95 +444,136 @@ function Delivery(props) {
         className="section_filter-delivert"
         style={{
           display: "flex",
-          justifyContent: "space-evenly",
           marginBottom: 16,
+          // justifyContent: "space-between",
         }}
       >
-        <div>
-          <p>Bộ lọc</p>
-        </div>
-        <div>
-          <div>Trạng thái</div>
+        <p style={{ marginLeft: 16, width: 48 }}>Bộ lọc</p>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-evenly",
+            width: "100%",
+          }}
+        >
           <div>
-            <Select
-              options={[
-                {
-                  value: "jack",
-                  label: "Jack",
-                },
-              ]}
-              style={{ width: "100%" }}
-            />
+            <div>Trạng thái</div>
+            <div>
+              <Select
+                options={[
+                  {
+                    value: "ready_to_pick",
+                    label: "Chờ lấy hàng",
+                  },
+                  {
+                    value: "picking",
+                    label: "Đang lấy hàng",
+                  },
+                  {
+                    value: "money_collect_picking",
+                    label: "Đang tương tác với người gửi",
+                  },
+                ]}
+                style={{ width: "200px" }}
+                defaultValue="Tất cả"
+                placeholder="Chọn trạng thái"
+                onChange={(value) =>
+                  setDateTime((pre) => ({ ...pre, status: [value] }))
+                }
+                allowClear
+              />
+            </div>
           </div>
-        </div>
 
-        <div>
-          <div>Tùy chọn thanh tooán</div>
           <div>
-            <Select
-              options={[
-                {
-                  value: "jack",
-                  label: "Jack",
-                },
-              ]}
-              style={{ width: "100%" }}
-            />
+            <div>Tùy chọn thanh toán</div>
+            <div>
+              <Select
+                options={[
+                  {
+                    value: 0,
+                    label: "Tất cả",
+                  },
+                  {
+                    value: 1,
+                    label: "Bên gửi trả phí",
+                  },
+                  {
+                    value: 2,
+                    label: "Bên nhận trả phí",
+                  },
+                ]}
+                style={{ width: "200px" }}
+                placeholder="Chọn kiểu thanh toán"
+                defaultValue={0}
+                onChange={(value) =>
+                  setDateTime((pre) => {
+                    if (value === 0)
+                      return {
+                        ...pre,
+                        payment_type_id: [1, 2],
+                      };
+                    if (value === 1) {
+                      return {
+                        ...pre,
+                        payment_type_id: [1],
+                      };
+                    }
+                    if (value === 2) {
+                      return {
+                        ...pre,
+                        payment_type_id: [2],
+                      };
+                    }
+                  })
+                }
+                allowClear
+              />
+            </div>
           </div>
-        </div>
 
-        <div>
-          <div>In vận đơn</div>
           <div>
-            <Select
-              options={[
-                {
-                  value: "jack",
-                  label: "Jack",
-                },
-              ]}
-              style={{ width: "100%" }}
-            />
-          </div>
-        </div>
+            <div>Thời gian tạo đơn</div>
+            <div style={{ display: "flex", justifyContent: "space-evenly" }}>
+              <div className="from_date">
+                <DatePicker
+                  onChange={(value) => {
+                    const formatDate = moment(value)
+                      .format("DD/MM/YYYY")
+                      .split("/");
 
-        <div>
-          <div>Thời gian tạo đơn</div>
-          <div style={{ display: "flex", justifyContent: "space-evenly" }}>
-            <div className="from_date">
-              <DatePicker
-                onChange={(value) => {
-                  const formatDate = moment(value)
-                    .format("DD/MM/YYYY")
-                    .split("/");
+                    const from_time =
+                      new Date(
+                        formatDate[2],
+                        formatDate[1] - 1,
+                        formatDate[0]
+                      ).getTime() / 1000;
 
-                  const from_time =
-                    new Date(
+                    setDateTime((pre) => ({ ...pre, from_time }));
+                  }}
+                  style={{ width: "200px" }}
+                  placeholder="Từ ngày"
+                />
+              </div>
+              <div className="to_date" style={{ marginLeft: 24 }}>
+                <DatePicker
+                  onChange={(value) => {
+                    const formatDate = moment(value)
+                      .format("DD/MM/YYYY")
+                      .split("/");
+
+                    const to_time_now = new Date(
                       formatDate[2],
                       formatDate[1] - 1,
                       formatDate[0]
-                    ).getTime() / 1000;
-
-                  setDateTime((pre) => ({ ...pre, from_time }));
-                }}
-              />
-            </div>
-            <div className="to_date">
-              <DatePicker
-                onChange={(value) => {
-                  const formatDate = moment(value)
-                    .format("DD/MM/YYYY")
-                    .split("/");
-
-                  const to_time_now = new Date(
-                    formatDate[2],
-                    formatDate[1] - 1,
-                    formatDate[0]
-                  ).getTime();
-                  const to_time = (to_time_now + 86400000) / 1000;
-                  setDateTime((pre) => ({ ...pre, to_time }));
-                }}
-              />
+                    ).getTime();
+                    const to_time = (to_time_now + 86400000) / 1000;
+                    setDateTime((pre) => ({ ...pre, to_time }));
+                  }}
+                  style={{ width: "200px" }}
+                  placeholder="Đến ngày"
+                />
+              </div>
             </div>
           </div>
         </div>
