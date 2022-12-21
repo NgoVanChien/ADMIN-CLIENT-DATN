@@ -83,6 +83,11 @@ const RatePage = () => {
     updateQuery();
   }, [page, searchValue]);
 
+
+  const handleClickDelete = (id) => {
+    setRates(rates.filter(rate => rate._id !== id));
+  }
+
   return (
     <div id="rates__page">
       <DetailRateModal data={selectedRate} onClose={handleCloseRate} />
@@ -143,6 +148,7 @@ const RatePage = () => {
                 >
                   <RateRecord
                     onClick={() => handleSelectRate(item)}
+                    handleClickDelete={handleClickDelete}
                     data={item}
                   />
                 </li>

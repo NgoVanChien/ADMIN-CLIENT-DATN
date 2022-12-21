@@ -7,8 +7,16 @@ const queryAllRates = (query = "") => {
   });
 };
 
+const removeRate = (saleId) => {
+  return axiosClient({
+    method: 'DELETE',
+    url: `/ratings/${saleId}`,
+  });
+};
+
 const RATE_API = {
   queryAllRates,
+  removeRate
 };
 
 export default RATE_API;

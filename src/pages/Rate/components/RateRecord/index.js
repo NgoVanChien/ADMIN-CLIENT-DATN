@@ -1,11 +1,42 @@
 import { DeleteFilled, EditFilled } from "@ant-design/icons";
-import { Col, Rate, Row, Switch } from "antd";
+import { Col, notification, Popconfirm, Rate, Row, Switch } from "antd";
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import RATE_API from "../../../../api/rate";
+import { STATUS_OK } from "../../../../constants/api";
 import "./style.scss";
 
-const RateRecord = ({ data, onClick }) => {
+const RateRecord = ({ data, onClick, handleClickDelete }) => {
   const [rateStatus, setRateStatus] = useState(data.status);
+
+  const confirm = async (data) => {
+    try {
+      const response = await RATE_API.removeRate(data?._id);
+      if (response.status === STATUS_OK) {
+        handleClickDelete(data?._id);
+        return notification.success({
+          placement: 'topRight',
+          message: 'Xóa thành công!',
+          duration: 3,
+        });
+      } else {
+        return notification.error({
+          placement: 'topRight',
+          message: 'Xóa thất bại!',
+          duration: 3,
+        });
+      }
+    } catch (error) {
+      return notification.error({
+        placement: 'topRight',
+        message: 'Xóa thất bại!',
+        duration: 3,
+      });
+    }
+  };
+  const cancel = (e) => {
+    return;
+  };
 
   return (
     <div className="rate__record">
@@ -47,7 +78,18 @@ const RateRecord = ({ data, onClick }) => {
               </Col>
               <Col xl={12} lg={12} md={12} sm={12} xs={12}>
                 <div className="actions-value">
-                  <DeleteFilled style={{ color: "var(--my-red)" }} />
+                  {/* <DeleteFilled style={{ color: "var(--my-red)" }} /> */}
+                  <Popconfirm
+                    title="Xóa?"
+                    onConfirm={() => confirm(data)}
+                    onCancel={cancel}
+                    okText="Ok"
+                    cancelText="Hủy"
+                  >
+                    <a href="#">
+                      <DeleteFilled style={{ color: "var(--my-red)" }} />
+                    </a>
+                  </Popconfirm>
                 </div>
               </Col>
             </Row>
