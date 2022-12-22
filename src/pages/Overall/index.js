@@ -28,10 +28,6 @@ const OverallPage = () => {
     })();
   }, []);
 
-  console.log(statisticData.topSold);
-  console.log(statisticData.brandStatistic);
-  console.log(statisticData.topRate);
-
   const topSoldData = statisticData.topSold?.map((item) => {
     return {
       name: item.name,

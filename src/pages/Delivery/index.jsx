@@ -77,8 +77,8 @@ function Delivery(props) {
       dateTime?.payment_type_id?.length > 0
         ? dateTime?.payment_type_id
         : [1, 2],
-    from_time: dateTime?.from_time ? dateTime?.from_time : 1670000400,
-    to_time: dateTime?.to_time ? dateTime?.to_time : 1671296400,
+    from_time: dateTime?.from_time ? dateTime?.from_time : 1669827600,
+    to_time: dateTime?.to_time ? dateTime?.to_time : 1672506000,
     offset: 0,
     limit: 20,
     option_value: null,

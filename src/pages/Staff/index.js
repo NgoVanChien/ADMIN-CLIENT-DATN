@@ -158,7 +158,7 @@ const StaffPage = () => {
               <Input.Group compact>
                 <Input
                   style={{ width: 240 }}
-                  placeholder="Nhập tên thương hiệu..."
+                  placeholder="Nhập tên nhân viên..."
                   onChange={handleSearchChange}
                 />
                 <Button type="primary">Tìm kiếm</Button>

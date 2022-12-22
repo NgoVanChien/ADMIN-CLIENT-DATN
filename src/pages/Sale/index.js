@@ -189,7 +189,7 @@ const SalePage = () => {
               <Input.Group compact>
                 <Input
                   style={{ width: 240 }}
-                  placeholder="Nhập tên thể loại..."
+                  placeholder="Nhập tên khuyến mãi..."
                   onChange={() => { }}
                 />
                 <Button type="primary">Tìm kiếm</Button>
