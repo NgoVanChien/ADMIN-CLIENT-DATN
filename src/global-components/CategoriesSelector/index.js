@@ -45,7 +45,7 @@ const CategoriesSeletor = ({ defaultItems = [], onSubmit, defaultChecked }) => {
   };
 
   useEffect(async () => {
-    const response = await CATEGORY_API.queryCategories("?status=true");
+    const response = await CATEGORY_API.getAllCategory();
     console.log(response)
     if (response.status === STATUS_FAIL) return console.log(response.message);
 

@@ -43,9 +43,9 @@ const ProductForm = ({ rateQty = 0, data, avgStar }) => {
   const [thumbnailImage, setThumbnailImage] = useState(
     data
       ? {
-          public_id: data.thumbnail_id,
-          url: data.thumbnail_url,
-        }
+        public_id: data.thumbnail_id,
+        url: data.thumbnail_url,
+      }
       : null
   );
 
@@ -177,7 +177,7 @@ const ProductForm = ({ rateQty = 0, data, avgStar }) => {
   useEffect(() => {
     (async function () {
       try {
-        const response = await BRAND_API.queryBrands("?status=true");
+        const response = await BRAND_API.getAllBrand();
 
         if (response.status === STATUS_OK) setBrands(response.data);
       } catch (error) {
@@ -277,11 +277,11 @@ const ProductForm = ({ rateQty = 0, data, avgStar }) => {
                     rules={
                       !data
                         ? [
-                            {
-                              required: true,
-                              message: "Giá sản phẩm không được để trống",
-                            },
-                          ]
+                          {
+                            required: true,
+                            message: "Giá sản phẩm không được để trống",
+                          },
+                        ]
                         : null
                     }
                   >

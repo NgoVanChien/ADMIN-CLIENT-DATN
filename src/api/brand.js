@@ -30,11 +30,19 @@ const updateBrand = (_id, data) => {
   });
 };
 
+const getAllBrand = () => {
+  return axiosClient({
+    method: "GET",
+    url: `/brands/all`,
+  });
+}
+
 const BRAND_API = {
   queryBrands,
   createBrand,
   updateBrand,
   removeBrands,
+  getAllBrand
 };
 
 export default BRAND_API;

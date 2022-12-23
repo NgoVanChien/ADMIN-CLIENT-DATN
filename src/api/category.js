@@ -30,11 +30,20 @@ const updateCategory = (_id, data) => {
   });
 };
 
+const getAllCategory = () => {
+  return axiosClient({
+    method: "GET",
+    url: `/categories/all`,
+  });
+}
+
+
 const CATEGORY_API = {
   queryCategories,
   createCategory,
   updateCategory,
   removeCategory,
+  getAllCategory
 };
 
 export default CATEGORY_API;
