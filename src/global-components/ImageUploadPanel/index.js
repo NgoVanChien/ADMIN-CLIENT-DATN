@@ -5,7 +5,7 @@ import CLOUDIARY_API from "../../api/cloudiary";
 import PRODUCT_API from "../../api/product";
 import { CLOUDINARY_PRESET, STATUS_FAIL } from "../../constants/api";
 
-const ImageUploadPanel = ({ productId, maxCount = 8 }) => {
+const ImageUploadPanel = ({ productId, maxCount = 8, formReset, data }) => {
   const [fileList, setFileList] = useState([]);
   const handleChange = ({ fileList }) => {
     setFileList(fileList);
@@ -66,6 +66,7 @@ const ImageUploadPanel = ({ productId, maxCount = 8 }) => {
   };
 
   useEffect(async () => {
+    if (!data) return;
     try {
       const response = await PRODUCT_API.getProductImages(productId);
 
@@ -84,6 +85,10 @@ const ImageUploadPanel = ({ productId, maxCount = 8 }) => {
       console.log(error.message);
     }
   }, [productId]);
+
+  useEffect(() => {
+    setFileList([])
+  }, [formReset])
 
   const uploadButton = (
     <div>

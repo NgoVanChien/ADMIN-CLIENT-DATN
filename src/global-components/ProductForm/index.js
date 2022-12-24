@@ -35,6 +35,7 @@ const ProductForm = ({ rateQty = 0, data, avgStar }) => {
   const [isBrandModalVisible, setIsBrandModalVisible] = useState(false);
   const [selectedBrand, setSelectedBrand] = useState(null);
   const [brands, setBrands] = useState([]);
+  const [formReset, setFormReset] = useState(false)
   const [selectedCategories, setSelectedCategories] = useState(null);
   const [status, setStatus] = useState(data ? data.status : true);
   const [description, setDescription] = useState(data?.description || "");
@@ -194,6 +195,10 @@ const ProductForm = ({ rateQty = 0, data, avgStar }) => {
       });
   }, [data]);
 
+  useEffect(() => {
+    if (!data) setFormReset(preState => !preState);
+  }, [])
+
   return (
     <div className="product__form">
       <Modal
@@ -254,7 +259,7 @@ const ProductForm = ({ rateQty = 0, data, avgStar }) => {
             </div>
             <div className="form__item image__list">
               <div className="form__item-title">Hình ảnh chi tiết</div>
-              <ImageUploadPanel productId={_id} />
+              <ImageUploadPanel productId={_id} formReset={formReset} data={data} />
             </div>
             <Form.Item
               label="Số lượng"

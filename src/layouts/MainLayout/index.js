@@ -211,7 +211,6 @@ const MainLayout = () => {
     // },
   ];
 
-  console.log("userInfo", userInfo);
 
   return (
     <div id="main__layout">
