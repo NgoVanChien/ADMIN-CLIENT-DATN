@@ -15,7 +15,15 @@ import "./style.scss";
 import moment from "moment";
 
 const OverallPage = () => {
-  const [date, setDate] = useState();
+  const now = new Date();
+  const format = "DD/MM/YYYY";
+  const firstDay = new Date(now.getFullYear(), now.getMonth(), 1);
+  const lastDay = new Date(now.getFullYear(), now.getMonth() + 1, 0);
+
+  const [date, setDate] = useState({
+    fromDate: new Date(firstDay).toISOString(),
+    toDate: new Date(lastDay).toISOString()
+  });
   const [statisticData, setStatisticData] = useState({});
 
   useEffect(() => {
@@ -28,6 +36,8 @@ const OverallPage = () => {
       }
     })();
   }, [date]);
+
+  console.log('date', date);
 
   const topSoldData = statisticData.topSold?.map((item) => {
     return {
@@ -53,18 +63,30 @@ const OverallPage = () => {
     };
   });
 
-  console.log('date', date);
+  console.log('topBrandData', topBrandData);
+  console.log('topSoldData', topSoldData);
+  console.log('topSoldData', topSoldData);
 
 
   return (
     <div id="overall__page">
       <div style={{ marginBottom: 24, display: 'flex', marginLeft: 16, width: '100%' }}>
         <div >
-          <DatePicker onChange={value => setDate(pre => ({ ...pre, fromDate: new Date(value).toISOString() }))} placeholder="Từ ngày" style={{ width: 200, cursor: 'pointer' }} />
+          <DatePicker
+            onChange={value => setDate(pre => ({ ...pre, fromDate: new Date(value).toISOString() }))}
+            placeholder="Từ ngày"
+            style={{ width: 200, cursor: 'pointer' }}
+            format={format}
+            defaultValue={moment(moment(firstDay).format(format), format)} />
         </div>
 
         <div style={{ marginLeft: 24 }}>
-          <DatePicker onChange={value => setDate(pre => ({ ...pre, toDate: new Date(value).toISOString() }))} placeholder="Đến ngày" style={{ width: 200, cursor: 'pointer' }} />
+          <DatePicker
+            onChange={value => setDate(pre => ({ ...pre, toDate: new Date(value).toISOString() }))}
+            placeholder="Đến ngày" style={{ width: 200, cursor: 'pointer' }}
+            format={format}
+            defaultValue={moment(moment(lastDay).format(format), format)}
+          />
         </div>
       </div>
       <div className="stats__viewer-wrapper">

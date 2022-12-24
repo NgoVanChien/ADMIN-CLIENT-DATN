@@ -85,61 +85,50 @@ const ProductForm = ({ rateQty = 0, data, avgStar }) => {
 
 
 
-  const handleFormSubmit = useCallback(
-    async (values) => {
-      let payload = {
-        // _id,
-        ...values,
-        status: status || true,
-        in_home: inHome,
-        categories: selectedCategories?.map((item) => item.value),
-        brand: selectedBrand?._id,
-        description: description.trim(),
-        thumbnail_url: thumbnailImage?.url,
-        thumbnail_id: thumbnailImage?.public_id,
-      };
+  const handleFormSubmit = async (values) => {
+    let payload = {
+      // _id,
+      ...values,
+      status: status || true,
+      in_home: inHome,
+      categories: selectedCategories?.map((item) => item.value),
+      brand: selectedBrand?._id,
+      description: description.trim(),
+      thumbnail_url: thumbnailImage?.url,
+      thumbnail_id: thumbnailImage?.public_id,
+    };
 
-      const indexDuplicatedName = product?.findIndex((x) => x?.name?.trim() === values?.name);
-      if (indexDuplicatedName !== -1) return setErrorMessage("Tên sản phẩm đã tồn tại trong cửa hàng!")
+    const indexDuplicatedName = product?.findIndex((x) => x?.name?.trim()?.toLowerCase() === values?.name?.trim().toLowerCase());
+    if (indexDuplicatedName !== -1) return setErrorMessage("Tên sản phẩm đã tồn tại trong cửa hàng!")
 
-      if (!payload.thumbnail_url)
-        return setErrorMessage("Hình ảnh hiển thị không được bỏ trống");
+    if (!payload.thumbnail_url)
+      return setErrorMessage("Hình ảnh hiển thị không được bỏ trống");
 
-      if (!data) {
-        if (!payload.brand)
-          return setErrorMessage("Thương hiệu không được bỏ trống");
+    if (!data) {
+      if (!payload.brand)
+        return setErrorMessage("Thương hiệu không được bỏ trống");
 
-        if (!payload.categories || payload.categories?.length === 0)
-          return setErrorMessage("Thể loại không được bỏ trống");
+      if (!payload.categories || payload.categories?.length === 0)
+        return setErrorMessage("Thể loại không được bỏ trống");
 
-        const response = await PRODUCT_API.createProduct(payload);
+      const response = await PRODUCT_API.createProduct(payload);
 
-        console.log('payload', payload);
+      console.log('payload', payload);
 
-        if (response.status === STATUS_FAIL)
-          return setErrorMessage(response.message);
+      if (response.status === STATUS_FAIL)
+        return setErrorMessage(response.message);
 
-        return redirect("/products");
-      } else {
-        payload = _.omitBy(payload, _.isNil);
-        const response = await PRODUCT_API.updateProduct(_id, payload);
+      return redirect("/products");
+    } else {
+      payload = _.omitBy(payload, _.isNil);
+      const response = await PRODUCT_API.updateProduct(_id, payload);
 
-        if (response.status === STATUS_FAIL)
-          return setErrorMessage(response.message);
+      if (response.status === STATUS_FAIL)
+        return setErrorMessage(response.message);
 
-        return redirect("/products");
-      }
-    },
-    [
-      data,
-      thumbnailImage,
-      selectedBrand,
-      selectedCategories,
-      status,
-      inHome,
-      description,
-    ]
-  );
+      return redirect("/products");
+    }
+  };
 
   const initialFormValues = useMemo(() => data || defaultValue, [data]);
   const currentBrand = useMemo(
