@@ -3,7 +3,7 @@ import {
   ScheduleOutlined,
   UsergroupAddOutlined,
 } from "@ant-design/icons";
-import { Col, Row } from "antd";
+import { Col, DatePicker, Row } from "antd";
 import React, { useEffect, useState } from "react";
 import COMMON_API from "../../api/common";
 import { STATUS_OK } from "../../constants/api";
@@ -12,21 +12,22 @@ import LineChartComponent from "./components/LineChart";
 import BarChartComponent from "./components/BarChart";
 import StatsViewer from "./components/StatsViewer";
 import "./style.scss";
+import moment from "moment";
 
 const OverallPage = () => {
+  const [date, setDate] = useState();
   const [statisticData, setStatisticData] = useState({});
 
   useEffect(() => {
     (async function () {
       try {
-        const response = await COMMON_API.getStatistic();
-
+        const response = await COMMON_API.getStatistic(date);
         if (response.status === STATUS_OK) setStatisticData(response.data);
       } catch (error) {
         console.log(error);
       }
     })();
-  }, []);
+  }, [date]);
 
   const topSoldData = statisticData.topSold?.map((item) => {
     return {
@@ -52,8 +53,20 @@ const OverallPage = () => {
     };
   });
 
+  console.log('date', date);
+
+
   return (
     <div id="overall__page">
+      <div style={{ marginBottom: 24, display: 'flex', marginLeft: 16, width: '100%' }}>
+        <div >
+          <DatePicker onChange={value => setDate(pre => ({ ...pre, fromDate: new Date(value).toISOString() }))} placeholder="Từ ngày" style={{ width: 200, cursor: 'pointer' }} />
+        </div>
+
+        <div style={{ marginLeft: 24 }}>
+          <DatePicker onChange={value => setDate(pre => ({ ...pre, toDate: new Date(value).toISOString() }))} placeholder="Đến ngày" style={{ width: 200, cursor: 'pointer' }} />
+        </div>
+      </div>
       <div className="stats__viewer-wrapper">
         <Row gutter={16}>
           <Col span={8}>

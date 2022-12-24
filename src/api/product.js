@@ -44,6 +44,13 @@ const getOneProduct = (slug) => {
   });
 };
 
+const getAllProduct = () => {
+  return axiosClient({
+    method: "POST",
+    url: '/products/all',
+  });
+};
+
 const updateProduct = (_id, newData) => {
   return axiosClient({
     method: "PUT",
@@ -93,6 +100,7 @@ const PRODUCT_API = {
   createImage,
   getProductImages,
   removeProduct,
+  getAllProduct
 };
 
 export default PRODUCT_API;

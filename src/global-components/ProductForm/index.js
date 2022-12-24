@@ -35,6 +35,7 @@ const ProductForm = ({ rateQty = 0, data, avgStar }) => {
   const [isBrandModalVisible, setIsBrandModalVisible] = useState(false);
   const [selectedBrand, setSelectedBrand] = useState(null);
   const [brands, setBrands] = useState([]);
+  const [product, setProduct] = useState([]);
   const [formReset, setFormReset] = useState(false)
   const [selectedCategories, setSelectedCategories] = useState(null);
   const [status, setStatus] = useState(data ? data.status : true);
@@ -82,10 +83,12 @@ const ProductForm = ({ rateQty = 0, data, avgStar }) => {
     setSelectedCategories(items);
   };
 
+
+
   const handleFormSubmit = useCallback(
     async (values) => {
       let payload = {
-        _id,
+        // _id,
         ...values,
         status: status || true,
         in_home: inHome,
@@ -95,6 +98,9 @@ const ProductForm = ({ rateQty = 0, data, avgStar }) => {
         thumbnail_url: thumbnailImage?.url,
         thumbnail_id: thumbnailImage?.public_id,
       };
+
+      const indexDuplicatedName = product?.findIndex((x) => x?.name?.trim() === values?.name);
+      if (indexDuplicatedName !== -1) return setErrorMessage("Tên sản phẩm đã tồn tại trong cửa hàng!")
 
       if (!payload.thumbnail_url)
         return setErrorMessage("Hình ảnh hiển thị không được bỏ trống");
@@ -108,6 +114,8 @@ const ProductForm = ({ rateQty = 0, data, avgStar }) => {
 
         const response = await PRODUCT_API.createProduct(payload);
 
+        console.log('payload', payload);
+
         if (response.status === STATUS_FAIL)
           return setErrorMessage(response.message);
 
@@ -115,7 +123,6 @@ const ProductForm = ({ rateQty = 0, data, avgStar }) => {
       } else {
         payload = _.omitBy(payload, _.isNil);
         const response = await PRODUCT_API.updateProduct(_id, payload);
-        console.log("response", response);
 
         if (response.status === STATUS_FAIL)
           return setErrorMessage(response.message);
@@ -197,6 +204,13 @@ const ProductForm = ({ rateQty = 0, data, avgStar }) => {
 
   useEffect(() => {
     if (!data) setFormReset(preState => !preState);
+  }, [])
+
+  useEffect(() => {
+    (async () => {
+      const getAllProduct = await PRODUCT_API.getAllProduct();
+      setProduct(getAllProduct.data)
+    })();
   }, [])
 
   return (

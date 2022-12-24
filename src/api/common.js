@@ -1,9 +1,10 @@
 import axiosClient from "./instances/axiosClient";
 
-const getStatistic = () => {
+const getStatistic = (data) => {
   return axiosClient({
-    method: "get",
+    method: "POST",
     url: "/statistic",
+    data
   });
 };
 
