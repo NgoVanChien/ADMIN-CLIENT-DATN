@@ -13,7 +13,7 @@ const StatsViewer = ({ title, value, color, description, iconEl }) => {
         <div className="stats__viewer-title">{title}</div>
         <div className="stats__viewer-value">{value}</div>
       </div>
-      <div className="stats__viewer-description">{description}</div>
+      <div className="stats__viewer-description" dangerouslySetInnerHTML={{ __html: description }}></div>
     </div>
   );
 };

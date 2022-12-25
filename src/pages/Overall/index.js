@@ -14,6 +14,10 @@ import StatsViewer from "./components/StatsViewer";
 import "./style.scss";
 import moment from "moment";
 
+export const formatDateTime = (value) => {
+  const fromDate = new Date(new Date(value).setHours(0, 0, 0, 0)).toISOString();
+  const toDate = new Date(new Date().setHours(23, 59, 59, 999)).toISOString();
+}
 const OverallPage = () => {
   const now = new Date();
   const format = "DD/MM/YYYY";
@@ -37,7 +41,10 @@ const OverallPage = () => {
     })();
   }, [date]);
 
-  console.log('date', date);
+  console.log('fromDate', moment(new Date(date.fromDate), 'YYYY-MM-DDT23:99:99.999[Z]').format('YYYY-MM-DDT23:99:99.999[Z]'));
+
+  console.log('date===', date);
+
 
   const topSoldData = statisticData.topSold?.map((item) => {
     return {
@@ -63,17 +70,12 @@ const OverallPage = () => {
     };
   });
 
-  console.log('topBrandData', topBrandData);
-  console.log('topSoldData', topSoldData);
-  console.log('topSoldData', topSoldData);
-
-
   return (
     <div id="overall__page">
       <div style={{ marginBottom: 24, display: 'flex', marginLeft: 16, width: '100%' }}>
         <div >
           <DatePicker
-            onChange={value => setDate(pre => ({ ...pre, fromDate: new Date(value).toISOString() }))}
+            onChange={value => setDate(pre => ({ ...pre, fromDate: new Date(new Date(value).setHours(0, 0, 0, 0)).toISOString() }))}
             placeholder="Từ ngày"
             style={{ width: 200, cursor: 'pointer' }}
             format={format}
@@ -82,7 +84,7 @@ const OverallPage = () => {
 
         <div style={{ marginLeft: 24 }}>
           <DatePicker
-            onChange={value => setDate(pre => ({ ...pre, toDate: new Date(value).toISOString() }))}
+            onChange={value => setDate(pre => ({ ...pre, toDate: new Date(new Date(value).setHours(23, 59, 59, 999)).toISOString() }))}
             placeholder="Đến ngày" style={{ width: 200, cursor: 'pointer' }}
             format={format}
             defaultValue={moment(moment(lastDay).format(format), format)}
@@ -98,7 +100,7 @@ const OverallPage = () => {
                 <ScheduleOutlined style={{ color: "white", fontSize: 20 }} />
               }
               color={"green"}
-              description="Tổng số đơn hàng trong 30 ngày cuối"
+              description={`Tổng số đơn hàng từ <span class="text-hightlight"> ${moment(date?.fromDate).format(format)} </span> đến <span class="text-hightlight"> ${moment(date?.toDate).format(format)} </span>`}
               value={statisticData.totalOrdersInMonth}
             />
           </Col>
@@ -111,7 +113,7 @@ const OverallPage = () => {
                 />
               }
               color={"green"}
-              description="Tổng doanh thu trong 30 ngày cuối"
+              description={`Tổng doanh thu từ <span class="text-hightlight"> ${moment(date?.fromDate).format(format)} </span> đến <span class="text-hightlight"> ${moment(date?.toDate).format(format)} </span>`}
               value={formatNumber(statisticData.totalAmountInMonth) + "đ"}
             />
           </Col>
@@ -124,7 +126,8 @@ const OverallPage = () => {
                 />
               }
               color={"green"}
-              description="Tổng số người dùng mới trong 30 ngày cuối"
+              description={`Tổng số người dùng mới từ <span class="text-hightlight"> ${moment(date?.fromDate).format(format)} </span> đến <span class="text-hightlight"> ${moment(date?.toDate).format(format)} </span>`}
+
               value={statisticData.totalUsersInMonth}
             />
           </Col>
