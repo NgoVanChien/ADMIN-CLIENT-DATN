@@ -1,4 +1,5 @@
-export const REST_URL = "http://localhost:5000/api/v1";
+export const baseURL = "https://vercel.com/ngovanchien/api-server-datn";
+// export const REST_URL = "http://localhost:5000/api/v1";
 export const CLOUDINARY_URL =
   "https://api.cloudinary.com/v1_1/mb1o4er/image/upload";
 export const CLOUDINARY_PRESET = "kltn_ntt";
