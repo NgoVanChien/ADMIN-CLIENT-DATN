@@ -1,5 +1,6 @@
 // export const baseURL = "https://vercel.com/ngovanchien/api-server-datn";
 // export const REST_URL = "http://localhost:5000/api/v1";
+export const REST_URL = "https://api-server-datn.vercel.app/";
 export const baseURL = "https://api-server-datn.vercel.app/";
 export const CLOUDINARY_URL =
   "https://api.cloudinary.com/v1_1/mb1o4er/image/upload";
